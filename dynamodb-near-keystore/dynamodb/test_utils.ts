@@ -81,7 +81,7 @@ export async function ConfigureAwsEnvironment(): Promise<void> {
     // const topicArns = topics.Topics?.filter(x => x.TopicArn).map(x => x.TopicArn ?? '') ?? []
     // for (const topicArn of topicArns) {
     //     if(topicArn.includes('offerCreated')){
-    //         process.env['ORDERBOOK_OFFER_CREATED_TOPIC_ARN'] = topicArn
+    //         process.env['SOME_TOPIC_ARN'] = topicArn
     //     }
     // }
 }

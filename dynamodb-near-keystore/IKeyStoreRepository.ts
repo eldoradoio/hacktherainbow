@@ -1,5 +1,3 @@
-import { AccountInfo } from "./DynamoDbKeyStore";
-
 export interface IKeyStoreRepository {
     get(networkId: string, accountId: string): Promise<NearAccountData>
     save(account: NearAccountData): Promise<NearAccountData>

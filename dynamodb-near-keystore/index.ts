@@ -1,41 +1,17 @@
 import * as nearApi from 'near-api-js/lib';
-import { UnencryptedFileSystemKeyStore } from 'near-api-js/lib/key_stores/unencrypted_file_system_keystore';
-import { InMemoryKeyStore } from 'near-api-js/lib/key_stores/in_memory_key_store';
 import BN from 'bn.js';
 import { KeyStore } from "near-api-js/lib/key_stores";
-//import { v4 } from "uuid";
-import { FinalExecutionStatusBasic } from "near-api-js/lib/providers";
-import { IKeyStoreRepository } from "./IKeyStoreRepository";
 import { INearAccounts } from './INearAccounts'
-import { DynamoDbKeyStoreRepository } from './dynamodb/DynamoDbKeyStoreRepository';
 
 export class NearAccounts implements INearAccounts {
    
     private keyStore: KeyStore
     private config: NearConfig;
-    private CONTRACT_NAME: string
 
-    constructor(keyStore: KeyStore) {
+    constructor(config: NearConfig, keyStore: KeyStore) {
         
         this.keyStore =keyStore
-            //  new InMemoryKeyStore()
-            //new UnencryptedFileSystemKeyStore('/home/dev/dev-keys')
-
-        this.CONTRACT_NAME = 'dev-1600709875200-2876266'
-
-        this.config = {
-            networkId: 'default',
-            nodeUrl: 'https://rpc.testnet.near.org',
-            walletUrl: 'https://wallet.testnet.near.org',
-            helperUrl: 'https://helper.testnet.near.org',
-            //contractName: CONTRACT_NAME,
-            //masterAccount: 'juan.testnet'
-            masterAccount: 'dev-1600709875200-2876266'
-            //masterAccount: 'test.near'
-            // deps: {
-            //     keyStore: keyStore
-            // },
-        };
+        this.config = config
     }
 
 
@@ -55,7 +31,7 @@ export class NearAccounts implements INearAccounts {
         const mainAccount = new nearApi.Account(near.connection, this.config.masterAccount);
 
         const amount = new BN("16552803572267293929962")
-        const accountId = `eldorado-${identifier}`
+        const accountId = identifier
 
         const keyPair = nearApi.utils.KeyPairEd25519.fromRandom();
         const publicKey = keyPair.publicKey.toString();

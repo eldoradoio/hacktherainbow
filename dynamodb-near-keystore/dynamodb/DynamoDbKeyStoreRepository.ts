@@ -1,6 +1,5 @@
 import { IKeyStoreRepository, NearAccountData } from "../IKeyStoreRepository";
 import * as AWS from "aws-sdk"
-import { PromiseResult } from "aws-sdk/lib/request";
 
 export class DynamoDbKeyStoreRepository implements IKeyStoreRepository {
 
