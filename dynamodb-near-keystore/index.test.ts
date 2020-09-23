@@ -7,6 +7,7 @@ describe('Near provider', ()=>{
         const dynamoDbKeyStoreRepository = new KeyStoreRepositoryMock()
         const dynamoDbKeyStore = new DynamoDbKeyStore(dynamoDbKeyStoreRepository)
         const nearAccounts = new NearAccounts(dynamoDbKeyStore)
-        await nearAccounts.createWallet('user-1')
+        const today = new Date(Date.now()).getTime()
+        await nearAccounts.createWallet(`user-${today}`)
     })
 })

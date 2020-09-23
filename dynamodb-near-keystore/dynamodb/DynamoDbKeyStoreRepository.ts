@@ -41,15 +41,16 @@ export class DynamoDbKeyStoreRepository implements IKeyStoreRepository {
         if (!result || !result.Item) {
             throw `Account "${accountId}" not found in network "${networkId}"`
         }
-        return this.toEntity(result)
+        return this.toEntity(result.Item)
 
     }
-    private toEntity(result: PromiseResult<AWS.DynamoDB.GetItemOutput, AWS.AWSError>): NearAccountData {
+
+    toEntity(attributes: AWS.DynamoDB.AttributeMap | undefined): NearAccountData | PromiseLike<NearAccountData> {
         const convert = AWS.DynamoDB.Converter.unmarshall
-        if (!result.Item) {
-            throw 'Shoudnt reach here'
+        if(!attributes){
+            throw 'should not reach here'
         }
-        const item = convert(result.Item)
+        const item = convert(attributes)
         return {
             accountId: item.accountId,
             networkId: item.networkId,
@@ -84,8 +85,8 @@ export class DynamoDbKeyStoreRepository implements IKeyStoreRepository {
             ReturnValues: 'ALL_NEW'
         }).promise()
         
-        return this.toEntity(result)
+        return this.toEntity(result.Attributes)
     }
-    
+
         
 }
