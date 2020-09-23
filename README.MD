@@ -1,1 +1,1 @@
-# El Dorado - Hack the Raimbow
+# El Dorado - Hack the Rainbow
