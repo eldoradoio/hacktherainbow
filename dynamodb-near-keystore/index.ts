@@ -62,9 +62,6 @@ export class NearAccounts implements INearAccounts {
 
         await this.keyStore.setKey(this.config.networkId, accountId, keyPair);
 
-        console.log('newPublicKey', keyPair)
-
-
         try {
             // This is expected to error because the account shouldn't exist
             await near.account(accountId);
