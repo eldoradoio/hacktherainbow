@@ -1,0 +1,5 @@
+{
+    // "jest.autoEnable": false,
+    // "jest.pathToJest": "npm run test --",
+    // "jest.rootPath": "dynamodb-near-keystore",
+}
