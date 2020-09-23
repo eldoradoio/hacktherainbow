@@ -1,5 +1,5 @@
 {
-  "name": "@eldorado/dynamodb-near-keystore",
+  "name": "@eldoradoio/near-dynamodb-keystore",
   "version": "0.0.1",
   "description": "",
   "main": "index.ts",
