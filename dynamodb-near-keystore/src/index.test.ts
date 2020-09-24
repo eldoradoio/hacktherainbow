@@ -12,7 +12,7 @@ describe('Near provider', () => {
         const network = (await fileKeyStore.getNetworks())[0]
         const devAccountId = (await fileKeyStore.getAccounts(network))[0]
         const key = (await fileKeyStore.getKey(network, devAccountId)) as KeyPairEd25519
-        if (!key) throw 'Please log in with the near cli or place the credentials file in the directory'
+        if (!key) throw new Error('Please log in with the near cli or place the credentials file in the directory')
 
         const dynamoDbKeyStoreRepository = new KeyStoreRepositoryMock()
 

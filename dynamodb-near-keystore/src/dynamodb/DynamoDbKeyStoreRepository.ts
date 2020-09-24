@@ -5,14 +5,14 @@ export class DynamoDbKeyStoreRepository implements IKeyStoreRepository {
 
     private tableName: string
     constructor() {
-        //There is a legit reason why we dont validate the value here ;)
+        // There is a legit reason why we dont validate the value here ;)
         this.tableName = process.env['DYNAMODB_KEY_STORE_TABLE_NAME'] || ''
     }
     
 
     private validateConfig() {
         if (!this.tableName) {
-            throw 'environment variable DYNAMODB_KEY_STORE_TABLE_NAME is not set'
+            throw new Error('environment variable DYNAMODB_KEY_STORE_TABLE_NAME is not set')
         }
     }
     
@@ -38,7 +38,7 @@ export class DynamoDbKeyStoreRepository implements IKeyStoreRepository {
         }).promise()
 
         if (!result || !result.Item) {
-            throw `Account "${accountId}" not found in network "${networkId}"`
+            throw new Error(`Account "${accountId}" not found in network "${networkId}"`)
         }
         return this.toEntity(result.Item)
 
@@ -47,7 +47,7 @@ export class DynamoDbKeyStoreRepository implements IKeyStoreRepository {
     toEntity(attributes: AWS.DynamoDB.AttributeMap | undefined): NearAccountData | PromiseLike<NearAccountData> {
         const convert = AWS.DynamoDB.Converter.unmarshall
         if(!attributes){
-            throw 'should not reach here'
+            throw new Error('should not reach here')
         }
         const item = convert(attributes)
         return {

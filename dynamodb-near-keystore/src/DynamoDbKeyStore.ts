@@ -29,8 +29,8 @@ export class DynamoDbKeyStore extends KeyStore {
     async setKey(networkId: string, accountId: string, keyPair: KeyPair): Promise<void> {
        
         const content: AccountInfo = { account_id: accountId, public_key: keyPair.getPublicKey().toString(), private_key: keyPair.toString() };
-        //networkId
-        //accountId
+        // networkId
+        // accountId
         await this.keyStoreRepo.save({
             accountId: accountId,
             networkId: networkId,
@@ -56,14 +56,14 @@ export class DynamoDbKeyStore extends KeyStore {
      * @param accountId The NEAR account tied to the key pair
      */
     async removeKey(networkId: string, accountId: string): Promise<void> {
-        throw 'this is a no op'
+        throw new Error('this is a no op')
     }
 
     /**
      * Removes all items from local storage
      */
     async clear(): Promise<void> {
-        throw 'this is a no op'
+        throw new Error('this is a no op')
     }
 
     /**
@@ -71,7 +71,7 @@ export class DynamoDbKeyStore extends KeyStore {
      * @returns {Promise<string[]>}
      */
     async getNetworks(): Promise<string[]> {
-        throw 'Not implemented' 
+        throw new Error('Not implemented')
     }
 
     /**
@@ -80,6 +80,6 @@ export class DynamoDbKeyStore extends KeyStore {
      * @returns{Promise<string[]>}
      */
     async getAccounts(networkId: string): Promise<string[]> {
-        throw 'this is a no op'
+        throw new Error('this is a no op')
     }
 }

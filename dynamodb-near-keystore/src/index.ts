@@ -3,6 +3,11 @@ import BN from 'bn.js';
 import { KeyStore } from "near-api-js/lib/key_stores";
 import { INearAccounts } from './INearAccounts'
 
+export * from './INearAccounts'
+export * from './IKeyStoreRepository'
+export * from './DynamoDbKeyStore'
+export * from './dynamodb/DynamoDbKeyStoreRepository'
+
 export class NearAccounts implements INearAccounts {
    
     private keyStore: KeyStore
@@ -15,8 +20,8 @@ export class NearAccounts implements INearAccounts {
     }
 
 
-    private async connect(): Promise<nearApi.Near> {
-        return await nearApi.connect({
+    private connect(): Promise<nearApi.Near> {
+        return nearApi.connect({
             ...this.config,
             deps: {
                 keyStore: this.keyStore
@@ -64,7 +69,7 @@ export class NearAccounts implements INearAccounts {
 }
 
 
-type NearConfig = {
+export type NearConfig = {
     networkId: string
     nodeUrl: string
     walletUrl: string

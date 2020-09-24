@@ -75,7 +75,7 @@ export async function ConfigureAwsEnvironment(): Promise<void> {
     }
 
  
-    //TODO: lists topics, somehow without querying SNS
+    // TODO: lists topics, somehow without querying SNS
     // const sns = new AWS.SNS()
     // const topics = await sns.listTopics().promise()
     // const topicArns = topics.Topics?.filter(x => x.TopicArn).map(x => x.TopicArn ?? '') ?? []
