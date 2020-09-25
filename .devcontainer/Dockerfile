@@ -2,7 +2,12 @@
 
 # [Choice] Node.js version: 14, 12, 10
 ARG VARIANT="12-buster"
-FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
+FROM gitpod/workspace-full
+RUN bash -c ". .nvm/nvm.sh \
+             && nvm install v12 && nvm alias default v12 \
+             && nvm use default && npm i -g yarn" \
+
+#FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
