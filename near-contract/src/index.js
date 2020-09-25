@@ -6,7 +6,7 @@ import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
 // global variable used throughout
-let currentGreeting
+let currentBalance
 
 const submitButton = document.querySelector('form button')
 
@@ -14,17 +14,14 @@ document.querySelector('form').onsubmit = async (event) => {
   event.preventDefault()
 
   // get elements from the form using their id attribute
-  const { fieldset, greeting } = event.target.elements
-
+  const { fieldset, address } = event.target.elements
   // disable the form while the value gets updated on-chain
   fieldset.disabled = true
 
+
   try {
     // make an update call to the smart contract
-    await window.contract.setGreeting({
-      // pass the value that the user entered in the greeting field
-      message: greeting.value
-    })
+    await window.contract.transfer({ to: address.value, tokens: 1 })
   } catch (e) {
     alert(
       'Something went wrong! ' +
@@ -41,7 +38,7 @@ document.querySelector('form').onsubmit = async (event) => {
   submitButton.disabled = true
 
   // update the greeting in the UI
-  await fetchGreeting()
+  await fetchBalance()
 
   // show notification
   document.querySelector('[data-behavior=notification]').style.display = 'block'
@@ -53,12 +50,16 @@ document.querySelector('form').onsubmit = async (event) => {
   }, 11000)
 }
 
-document.querySelector('input#greeting').oninput = (event) => {
-  if (event.target.value !== currentGreeting) {
+document.querySelector('input#amount').oninput = (event) => {
+  if (event.target.value !== currentBalance) {
     submitButton.disabled = false
   } else {
     submitButton.disabled = true
   }
+}
+
+document.querySelector('#claim').onclick = async (event) => {
+  await contract.init({ initialOwner: window.accountId })
 }
 
 document.querySelector('#sign-in-button').onclick = login
@@ -89,19 +90,31 @@ function signedInFlow() {
   accountLink.href = accountLink.href.replace('testnet', networkId)
   contractLink.href = contractLink.href.replace('testnet', networkId)
 
-  fetchGreeting()
+  fetchBalance()
 }
 
-// update global currentGreeting variable; update DOM with it
-async function fetchGreeting() {
-  currentGreeting = await contract.getGreeting({ accountId: window.accountId })
-  document.querySelectorAll('[data-behavior=greeting]').forEach(el => {
-    // set divs, spans, etc
-    el.innerText = currentGreeting
-
-    // set input elements
-    el.value = currentGreeting
+// update global currentBalance variable; update DOM with it
+async function fetchBalance() {
+  currentBalance = await contract.balanceOf({ tokenOwner: window.accountId })
+  document.querySelectorAll('[data-behavior=balance]').forEach(el => {
+    el.innerText = currentBalance
+    el.value = currentBalance
   })
+
+  const totalSupply = await contract.totalSupply()  
+  document.querySelectorAll('[data-behavior=supply]').forEach(el => {
+    el.innerText = totalSupply
+  })
+
+  const owner = await contract.owner()  
+  document.querySelectorAll('[data-behavior=owner]').forEach(el => {
+    el.innerText = owner
+  })
+  if(!owner){
+    document.querySelectorAll('#claim').forEach(el => {
+      el.style= ""
+    })
+  }
 }
 
 // `nearInitPromise` gets called on page load

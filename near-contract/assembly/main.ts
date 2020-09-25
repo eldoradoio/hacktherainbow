@@ -11,11 +11,15 @@ export function init(initialOwner: string): void {
   logging.log("initialOwner: " + initialOwner);
   assert(storage.get<string>("init") == null, "Already initialized token supply");
   balances.set(initialOwner, TOTAL_SUPPLY);
-  storage.set("init", "done");
+  storage.set("init", initialOwner);
 }
 
 export function totalSupply(): string {
   return TOTAL_SUPPLY.toString();
+}
+
+export function owner(): string | null {
+  return storage.get<string>("init")
 }
 
 export function balanceOf(tokenOwner: string): u32 {
