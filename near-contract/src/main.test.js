@@ -3,13 +3,16 @@ beforeAll(async function () {
   const near = await nearlib.connect(nearConfig)
   window.accountId = nearConfig.contractName
   window.contract = await near.loadContract(nearConfig.contractName, {
-    viewMethods: ['getGreeting'],
-    changeMethods: [],
+    viewMethods: ['balanceOf'],
+    changeMethods: ['transfer'],
     sender: window.accountId
   })
 })
 
-test('getGreeting', async () => {
-  const message = await window.contract.getGreeting({ accountId: window.accountId })
-  expect(message).toEqual('Hello')
+test('transfer', async () => {
+  const balance = await window.contract.balanceOf({tokenOwner: window.accountId})
+  //console.log('balance', balance)
+  expect(balance).toBe(0)
+  // const result = await window.contract.transfer({ to: window.accountId, tokens: 1 })
+  // expect(result).toBe(true)
 })
