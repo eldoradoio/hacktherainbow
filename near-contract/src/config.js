@@ -1,6 +1,7 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME ||'near-contract'
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'juan.testnet'
 
 function getConfig(env) {
+  console.log('config', env)
   switch (env) {
 
   case 'production':
