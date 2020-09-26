@@ -22073,9 +22073,11 @@ exports.keyStores = __importStar(require("./key_stores/browser-index"));
 __exportStar(require("./common-index"), exports);
 
 },{"./key_stores/browser-index":"../node_modules/near-api-js/lib/key_stores/browser-index.js","./common-index":"../node_modules/near-api-js/lib/common-index.js"}],"config.js":[function(require,module,exports) {
-var CONTRACT_NAME = "dev-1601061545629-1614741" || 'near-contract';
+var CONTRACT_NAME = "dev-1601061545629-1614741" || 'juan.testnet';
 
 function getConfig(env) {
+  console.log('config', env);
+
   switch (env) {
     case 'production':
     case 'mainnet':
@@ -22194,7 +22196,7 @@ function _initContract() {
               // View methods are read only. They don't modify the state, but usually return some value.
               viewMethods: ['balanceOf', 'totalSupply', 'owner'],
               // Change methods can modify the state. But you don't receive the returned value when called.
-              changeMethods: ['transfer', 'init']
+              changeMethods: ['transfer', 'init', 'mint']
             });
 
           case 7:
@@ -22342,6 +22344,30 @@ document.querySelector('#claim').onclick = /*#__PURE__*/function () {
   };
 }();
 
+document.querySelector('#mint').onclick = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(event) {
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return contract.mint({
+              amount: 100
+            });
+
+          case 2:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function (_x3) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
 document.querySelector('#sign-in-button').onclick = _utils.login;
 document.querySelector('#sign-out-button').onclick = _utils.logout; // Display the signed-out-flow container
 
@@ -22375,52 +22401,56 @@ function fetchBalance() {
 
 
 function _fetchBalance() {
-  _fetchBalance = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+  _fetchBalance = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
     var totalSupply, owner;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            _context3.next = 2;
+            _context4.next = 2;
             return contract.balanceOf({
               tokenOwner: window.accountId
             });
 
           case 2:
-            currentBalance = _context3.sent;
+            currentBalance = _context4.sent;
             document.querySelectorAll('[data-behavior=balance]').forEach(function (el) {
               el.innerText = currentBalance;
               el.value = currentBalance;
             });
-            _context3.next = 6;
+            _context4.next = 6;
             return contract.totalSupply();
 
           case 6:
-            totalSupply = _context3.sent;
+            totalSupply = _context4.sent;
             document.querySelectorAll('[data-behavior=supply]').forEach(function (el) {
               el.innerText = totalSupply;
             });
-            _context3.next = 10;
+            _context4.next = 10;
             return contract.owner();
 
           case 10:
-            owner = _context3.sent;
+            owner = _context4.sent;
             document.querySelectorAll('[data-behavior=owner]').forEach(function (el) {
               el.innerText = owner;
             });
 
             if (!owner) {
-              document.querySelectorAll('#claim').forEach(function (el) {
+              document.querySelectorAll('[data-behavior=claim]').forEach(function (el) {
+                el.style = "";
+              });
+            } else {
+              document.querySelectorAll('[data-behavior=mint]').forEach(function (el) {
                 el.style = "";
               });
             }
 
           case 13:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3);
+    }, _callee4);
   }));
   return _fetchBalance.apply(this, arguments);
 }
@@ -22456,7 +22486,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37705" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45491" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
