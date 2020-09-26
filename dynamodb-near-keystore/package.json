@@ -2,8 +2,8 @@
   "name": "@eldoradoio/near-dynamodb-keystore",
   "version": "0.0.2",
   "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/lib/index.js",
+  "module": "dist/lib/index.js",
   "typings": "dist/types/index.d.ts",
   "files": [
     "dist"
