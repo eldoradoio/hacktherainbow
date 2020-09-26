@@ -62,6 +62,10 @@ document.querySelector('#claim').onclick = async (event) => {
   await contract.init({ initialOwner: window.accountId })
 }
 
+document.querySelector('#mint').onclick = async (event) => {
+  await contract.mint({ amount: 100 })
+}
+
 document.querySelector('#sign-in-button').onclick = login
 document.querySelector('#sign-out-button').onclick = logout
 
@@ -111,7 +115,11 @@ async function fetchBalance() {
     el.innerText = owner
   })
   if(!owner){
-    document.querySelectorAll('#claim').forEach(el => {
+    document.querySelectorAll('[data-behavior=claim]').forEach(el => {
+      el.style= ""
+    })
+  }else{
+    document.querySelectorAll('[data-behavior=mint]').forEach(el => {
       el.style= ""
     })
   }
