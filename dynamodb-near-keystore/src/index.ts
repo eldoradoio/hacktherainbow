@@ -75,6 +75,7 @@ export type NearConfig = {
     walletUrl: string
     helperUrl: string
     masterAccount: string
+    contractName: string
 }
 
 export type NearAccount = {
