@@ -1,5 +1,5 @@
 import { Context, u128, VMContext } from "near-sdk-as";
-import { init, totalSupply, balanceOf, transfer, approve, transferFrom } from "../main";
+import { init, totalSupply, balanceOf, transfer, approve, transferFrom, mint } from "../main";
 
 let alice = 'alice';
 let bob = 'bob.near';
@@ -10,53 +10,71 @@ describe('Token', function () {
 
     });
 
-    describe('with alice as initial owner', () => {
-        beforeEach(() => {
-            VMContext.setSigner_account_id(alice);
-            VMContext.setAccount_balance(u128.fromString("1000000"));
-            init(alice);
-        });
 
-        it("intially has " + totalSupply() + " tokens", () => {
-            expect(balanceOf(alice).toString()).toBe('1000000');
-        });
-
-        it('can transfer to other account', () => {
-            const aliceStartBalance = balanceOf(alice);
-            const bobStartBalance = balanceOf(bob);
-
-            transfer(bob, 100);
-
-            const aliceEndBalance = balanceOf(alice);
-            const bobEndBalance = balanceOf(bob);
-            expect(aliceEndBalance).toBe(aliceStartBalance - 100);
-            expect(bobEndBalance).toBe(bobStartBalance + 100);
-        });
-
-        it('can transfer from approved account to another account', () => {
-            transfer(bob, 100);
-            const aliceStartBalance = balanceOf(alice);
-            const bobStartBalance = balanceOf(bob);
-            const eveStartBalance = balanceOf(eve);
-
-            approve(eve, 100);
-
-            const aliceMidBalance = balanceOf(alice);
-            const bobMidBalance = balanceOf(bob);
-            const eveMidBalance = balanceOf(eve);
-            expect(aliceMidBalance).toBe(aliceStartBalance);
-            expect(bobMidBalance).toBe(bobStartBalance);
-            expect(eveMidBalance).toBe(eveStartBalance);
-
-            // TODO: Use "eve" as sender
-            transferFrom(alice, eve, 50);
-
-            const aliceEndBalance = balanceOf(alice);
-            const bobEndBalance = balanceOf(bob);
-            const eveEndBalance = balanceOf(eve);
-            expect(aliceEndBalance).toBe(aliceStartBalance - 50);
-            expect(bobEndBalance).toBe(bobStartBalance);
-            expect(eveEndBalance).toBe(eveStartBalance + 50);
-        });
+    beforeEach(() => {
+        //VMContext.setSigner_account_id(owner);
+        VMContext.setAccount_balance(u128.fromString("1000000"));
+        init();
     });
+
+    it("intially has 0 tokens", () => {
+        expect(balanceOf(Context.sender).toString()).toBe('0');
+        expect(balanceOf(alice).toString()).toBe('0');
+        expect(balanceOf(bob).toString()).toBe('0');
+        expect(balanceOf(eve).toString()).toBe('0');
+    });
+
+    it('can mint tokens', ()=>{
+        const preSupply = totalSupply()
+        const preBalance = balanceOf(Context.sender)
+
+        mint(10)
+
+        const postSupply = totalSupply()
+        const postBalance = balanceOf(Context.sender)
+        expect(postBalance).toBe(preBalance + 10)
+        expect(postSupply).toBe(preSupply + 10)
+    })
+
+    // it('can transfer to other account', () => {
+        
+        
+
+    //     const aliceStartBalance = balanceOf(alice);
+    //     const bobStartBalance = balanceOf(bob);
+
+    //     transfer(bob, 100);
+
+    //     const aliceEndBalance = balanceOf(alice);
+    //     const bobEndBalance = balanceOf(bob);
+    //     expect(aliceEndBalance).toBe(aliceStartBalance - 100);
+    //     expect(bobEndBalance).toBe(bobStartBalance + 100);
+    // });
+
+    // it('can transfer from approved account to another account', () => {
+    //     transfer(bob, 100);
+    //     const aliceStartBalance = balanceOf(alice);
+    //     const bobStartBalance = balanceOf(bob);
+    //     const eveStartBalance = balanceOf(eve);
+
+    //     approve(eve, 100);
+
+    //     const aliceMidBalance = balanceOf(alice);
+    //     const bobMidBalance = balanceOf(bob);
+    //     const eveMidBalance = balanceOf(eve);
+    //     expect(aliceMidBalance).toBe(aliceStartBalance);
+    //     expect(bobMidBalance).toBe(bobStartBalance);
+    //     expect(eveMidBalance).toBe(eveStartBalance);
+
+    //     // TODO: Use "eve" as sender
+    //     transferFrom(alice, eve, 50);
+
+    //     const aliceEndBalance = balanceOf(alice);
+    //     const bobEndBalance = balanceOf(bob);
+    //     const eveEndBalance = balanceOf(eve);
+    //     expect(aliceEndBalance).toBe(aliceStartBalance - 50);
+    //     expect(bobEndBalance).toBe(bobStartBalance);
+    //     expect(eveEndBalance).toBe(eveStartBalance + 50);
+    // });
+
 });
