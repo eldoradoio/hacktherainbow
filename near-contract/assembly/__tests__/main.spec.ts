@@ -1,13 +1,14 @@
 import { Context, u128, VMContext } from "near-sdk-as";
 import { init, totalSupply, balanceOf, transfer, approve, transferFrom, mint } from "../main";
 
+let owner = ''
 let alice = 'alice';
 let bob = 'bob.near';
 let eve = 'eve.near';
 
 describe('Token', function () {
     beforeAll(() => {
-
+        owner = Context.sender
     });
 
 
@@ -26,19 +27,29 @@ describe('Token', function () {
 
     it('can mint tokens', ()=>{
         const preSupply = totalSupply()
-        const preBalance = balanceOf(Context.sender)
+        const preBalance = balanceOf(owner)
 
         mint(10)
 
         const postSupply = totalSupply()
-        const postBalance = balanceOf(Context.sender)
+        const postBalance = balanceOf(owner)
         expect(postBalance).toBe(preBalance + 10)
         expect(postSupply).toBe(preSupply + 10)
+
+        mint(40)
+
+        const postSupply2 = totalSupply()
+        const postBalance2 = balanceOf(owner)
+        expect(postBalance2).toBe(postBalance + 40)
+        expect(postSupply2).toBe(postSupply + 40)
     })
 
     it('Alice can transfer to other account', () => {
-        
+
+        VMContext.setSigner_account_id(owner);
+        VMContext.setAccount_balance(u128.fromString("1000000"));
         mint(100)
+
         transfer(alice, 100)
         
         VMContext.setSigner_account_id(alice);
@@ -55,30 +66,40 @@ describe('Token', function () {
         expect(bobEndBalance).toBe(bobStartBalance + 100);
     });
 
-    // it('can transfer from approved account to another account', () => {
-    //     transfer(bob, 100);
-    //     const aliceStartBalance = balanceOf(alice);
-    //     const bobStartBalance = balanceOf(bob);
-    //     const eveStartBalance = balanceOf(eve);
+    it('can transfer from approved account to another account', () => {
 
-    //     approve(eve, 100);
+        VMContext.setSigner_account_id(owner);
+        VMContext.setAccount_balance(u128.fromString("1000000"));
+        mint(100)
 
-    //     const aliceMidBalance = balanceOf(alice);
-    //     const bobMidBalance = balanceOf(bob);
-    //     const eveMidBalance = balanceOf(eve);
-    //     expect(aliceMidBalance).toBe(aliceStartBalance);
-    //     expect(bobMidBalance).toBe(bobStartBalance);
-    //     expect(eveMidBalance).toBe(eveStartBalance);
+        //transfer(alice, 100)
+        
+        //VMContext.setSigner_account_id(alice);
+        //VMContext.setAccount_balance(u128.fromString("1000000"));
 
-    //     // TODO: Use "eve" as sender
-    //     transferFrom(alice, eve, 50);
+        //transfer(bob, 100);
+        // const aliceStartBalance = balanceOf(alice);
+        // const bobStartBalance = balanceOf(bob);
+        // const eveStartBalance = balanceOf(eve);
 
-    //     const aliceEndBalance = balanceOf(alice);
-    //     const bobEndBalance = balanceOf(bob);
-    //     const eveEndBalance = balanceOf(eve);
-    //     expect(aliceEndBalance).toBe(aliceStartBalance - 50);
-    //     expect(bobEndBalance).toBe(bobStartBalance);
-    //     expect(eveEndBalance).toBe(eveStartBalance + 50);
-    // });
+        // approve(eve, 100);
+
+        // const aliceMidBalance = balanceOf(alice);
+        // const bobMidBalance = balanceOf(bob);
+        // const eveMidBalance = balanceOf(eve);
+        // expect(aliceMidBalance).toBe(aliceStartBalance);
+        // expect(bobMidBalance).toBe(bobStartBalance);
+        // expect(eveMidBalance).toBe(eveStartBalance);
+
+        // // TODO: Use "eve" as sender
+        // transferFrom(alice, eve, 50);
+
+        // const aliceEndBalance = balanceOf(alice);
+        // const bobEndBalance = balanceOf(bob);
+        // const eveEndBalance = balanceOf(eve);
+        // expect(aliceEndBalance).toBe(aliceStartBalance - 50);
+        // expect(bobEndBalance).toBe(bobStartBalance);
+        // expect(eveEndBalance).toBe(eveStartBalance + 50);
+    });
 
 });
