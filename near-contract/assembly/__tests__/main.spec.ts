@@ -36,20 +36,24 @@ describe('Token', function () {
         expect(postSupply).toBe(preSupply + 10)
     })
 
-    // it('can transfer to other account', () => {
+    it('Alice can transfer to other account', () => {
         
+        mint(100)
+        transfer(alice, 100)
         
+        VMContext.setSigner_account_id(alice);
+        VMContext.setAccount_balance(u128.fromString("1000000"));
 
-    //     const aliceStartBalance = balanceOf(alice);
-    //     const bobStartBalance = balanceOf(bob);
+        const aliceStartBalance = balanceOf(alice);
+        const bobStartBalance = balanceOf(bob);
 
-    //     transfer(bob, 100);
+        transfer(bob, 100);
 
-    //     const aliceEndBalance = balanceOf(alice);
-    //     const bobEndBalance = balanceOf(bob);
-    //     expect(aliceEndBalance).toBe(aliceStartBalance - 100);
-    //     expect(bobEndBalance).toBe(bobStartBalance + 100);
-    // });
+        const aliceEndBalance = balanceOf(alice);
+        const bobEndBalance = balanceOf(bob);
+        expect(aliceEndBalance).toBe(aliceStartBalance - 100);
+        expect(bobEndBalance).toBe(bobStartBalance + 100);
+    });
 
     // it('can transfer from approved account to another account', () => {
     //     transfer(bob, 100);
