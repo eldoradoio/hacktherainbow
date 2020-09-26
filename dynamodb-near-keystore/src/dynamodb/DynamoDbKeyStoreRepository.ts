@@ -62,6 +62,7 @@ export class DynamoDbKeyStoreRepository implements IKeyStoreRepository {
     async save(account: NearAccountData): Promise<NearAccountData> {
         this.validateConfig();
         const db = new AWS.DynamoDB()
+        // TODO: we should not override keypairs, losing a privatekey is BAD
         const result = await db.updateItem({
             Key: {
                 "networkId": {
