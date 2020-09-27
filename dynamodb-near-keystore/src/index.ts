@@ -105,6 +105,7 @@ export class NearAccounts implements INearAccounts {
         // }
         const allowance = await masterContract.allowance({ tokenOwner: from,  spender: masterAccount.accountId})
         if(allowance < parseInt(amount, undefined) ){
+            // TODO: fund account if not enough balance for any reason
             console.log('not enough allowance. Calling approve')
             const senderContract = this.getContract(fromAccount)
 

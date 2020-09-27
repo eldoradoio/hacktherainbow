@@ -34,7 +34,7 @@ describe('Near provider', () => {
 
         // assuming we've got enough tokens on our main account
         // we send 1 to our sender
-        await nearAccounts.transfer(fromAccount.accountId, "1")
+        await nearAccounts.transfer(fromAccount.accountId, "5")
 
         // proceed to send that token to the receiver
         const transfer = await nearAccounts.transferFrom(fromAccount.accountId, toAccount.accountId, '1')
@@ -46,6 +46,10 @@ describe('Near provider', () => {
 
         const tobalance = await nearAccounts.getWallet(toAccount.accountId)
         expect(tobalance?.balance).toBe('1')
+
+        await nearAccounts.transferFrom(fromAccount.accountId, toAccount.accountId, '1')
+        await nearAccounts.transferFrom(fromAccount.accountId, toAccount.accountId, '1')
+        await nearAccounts.transferFrom(fromAccount.accountId, toAccount.accountId, '1')
     })
 
 
