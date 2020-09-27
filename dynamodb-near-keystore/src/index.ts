@@ -41,7 +41,7 @@ export class NearAccounts implements INearAccounts {
         const createAccountAmount = new BN("16552803572267293929962")
         const noIdeaWhy = new BN("2991510480986748")
         const amount = createAccountAmount.add(approveAmount).add(noIdeaWhy)
-        const accountId = identifier
+        const accountId = identifier // TODO:  hash this?
 
         const keyPair = nearApi.utils.KeyPairEd25519.fromRandom();
         const publicKey = keyPair.publicKey.toString();
