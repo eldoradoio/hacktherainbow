@@ -22076,8 +22076,6 @@ __exportStar(require("./common-index"), exports);
 var CONTRACT_NAME = "dev-1601061545629-1614741" || 'juan.testnet';
 
 function getConfig(env) {
-  console.log('config', env);
-
   switch (env) {
     case 'production':
     case 'mainnet':
@@ -22264,7 +22262,7 @@ document.querySelector('form').onsubmit = /*#__PURE__*/function () {
             _context.next = 6;
             return window.contract.transfer({
               to: address.value,
-              tokens: 1
+              tokens: parseInt(parseInt(amount.value).toFixed(0))
             });
 
           case 6:
@@ -22352,7 +22350,7 @@ document.querySelector('#mint').onclick = /*#__PURE__*/function () {
           case 0:
             _context3.next = 2;
             return contract.mint({
-              amount: 100
+              amount: 10000
             });
 
           case 2:
@@ -22486,7 +22484,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45491" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41285" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
