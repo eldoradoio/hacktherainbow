@@ -1,5 +1,5 @@
 import { Context, u128, VMContext } from "near-sdk-as";
-import { init, totalSupply, balanceOf, transfer, approve, transferFrom, mint } from "../main";
+import { init, totalSupply, balanceOf, transfer, approve, transferFrom, mint, allowance } from "../main";
 
 let owner = ''
 let alice = 'alice';
@@ -89,29 +89,30 @@ describe('Token', function () {
         const bobStartBalance = balanceOf(bob);
         const eveStartBalance = balanceOf(eve);
 
+        // AS ALICE ALLOW EVE TO SPEND 100 
         approve(eve, 100);
-
+        
         const aliceMidBalance = balanceOf(alice);
         const bobMidBalance = balanceOf(bob);
         const eveMidBalance = balanceOf(eve);
         expect(aliceMidBalance).toBe(aliceStartBalance);
         expect(bobMidBalance).toBe(bobStartBalance);
         expect(eveMidBalance).toBe(eveStartBalance);
-
+        expect(allowance(alice, eve)).toBe(100)
         
         /**
-         * AS EVE
+         * AS EVE FROM ALICE TO BOB
          */
         VMContext.setSigner_account_id(eve);
         VMContext.setAccount_balance(u128.fromString("1000000"));
-        transferFrom(alice, eve, 50);
+        transferFrom(alice, bob, 50);
 
         const aliceEndBalance = balanceOf(alice);
         const bobEndBalance = balanceOf(bob);
         const eveEndBalance = balanceOf(eve);
         expect(aliceEndBalance).toBe(aliceStartBalance - 50);
-        expect(bobEndBalance).toBe(bobStartBalance);
-        expect(eveEndBalance).toBe(eveStartBalance + 50);
+        expect(bobEndBalance).toBe(bobStartBalance + 50);
+        expect(eveEndBalance).toBe(eveStartBalance);
     });
 
 });

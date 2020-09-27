@@ -105,16 +105,17 @@ export function transfer(to: string, tokens: u32): boolean {
 }
 
 export function approve(spender: string, tokens: u32): boolean {
-  logging.log("approve: " + spender + " tokens: " + tokens.toString());
+  logging.log(context.sender + " approves " + spender + " to use tokens: " + tokens.toString());
   approves.set(context.sender + ":" + spender, tokens);
   return true;
 }
 
 export function transferFrom(from: string, to: string, tokens: u32): boolean {
+  logging.log("transfer by: " + context.sender + " from: " + from + " to: " + to + " tokens: " + tokens.toString());
   const fromAmount = getBalance(from);
   assert(fromAmount >= tokens, "not enough tokens on account");
-  const approvedAmount = allowance(from, to);
-  assert(tokens <= approvedAmount, "not enough tokens approved to transfer");
+  const approvedAmount = allowance(from, context.sender);
+  assert(tokens < approvedAmount, "not enough tokens approved to transfer. Amount: " + tokens.toString() + " - approved:" + approvedAmount.toString());
   assert(getBalance(to) <= getBalance(to) + tokens, "overflow at the receiver side");
   balances.set(from, fromAmount - tokens);
   balances.set(to, getBalance(to) + tokens);
