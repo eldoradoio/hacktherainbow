@@ -44,6 +44,9 @@ describe('Near provider', () => {
         expect(status?.from).toBe(fromAccount.accountId)
         expect(status?.to).toBe(toAccount.accountId)
         expect(status?.amount).toBe('1')
+
+        const tobalance = await nearAccounts.getWallet(toAccount.accountId)
+        expect(tobalance?.balance).toBe('1')
     })
 
 

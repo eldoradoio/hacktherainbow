@@ -32,7 +32,23 @@ export class NearAccounts implements INearAccounts {
         });
     }
 
-    public async createWallet(identifier: string): Promise<NearAccount> {
+    public async getWallet(accountId: string): Promise<NearAccount | undefined> {
+        const near = await this.connect()
+        const account = await near.account(accountId);
+        if (!account) {
+            throw new Error(`Sorry, account '${accountId}' does not exists.`);
+        }
+        const contract = this.getContract(account)
+        const balance = await contract.balanceOf({ tokenOwner: account.accountId })
+        return {
+            accountId: account.accountId,
+            balance: new BN(balance).toString(),
+            status: 'created',
+            walletId: account.accountId
+        }
+    }
+
+    public async createWallet(accountId: string): Promise<NearAccount> {
         const near = await this.connect()
 
         const mainAccount = new nearApi.Account(near.connection, this.config.masterAccount);
@@ -41,7 +57,6 @@ export class NearAccounts implements INearAccounts {
         const createAccountAmount = new BN("16552803572267293929962")
         const noIdeaWhy = new BN("2991510480986748")
         const amount = createAccountAmount.add(approveAmount).add(noIdeaWhy)
-        const accountId = identifier // TODO:  hash this?
 
         const keyPair = nearApi.utils.KeyPairEd25519.fromRandom();
         const publicKey = keyPair.publicKey.toString();
@@ -77,7 +92,6 @@ export class NearAccounts implements INearAccounts {
             accountId: accountId,
             balance: '0',
             status: 'created',
-            identifier: identifier,
             walletId: accountId
         }
     }
@@ -150,12 +164,8 @@ export class NearAccounts implements INearAccounts {
             }
         }
 
-
-        // console.log(JSON.stringify(receipt, null, 2));
         const receiptId = receipt.transaction_outcome.outcome.receipt_ids[0]
         const txHash = receipt.transaction_outcome.id
-        console.log('receipt 1', receiptId)
-        console.log('txhash', txHash)
 
         return {
             from: from,
@@ -169,14 +179,13 @@ export class NearAccounts implements INearAccounts {
 
 
     public async getTransfer(txHash: string): Promise<NearTransfer | undefined> {
-        
+
         const near = await this.connect()
         const txHashBytes = nearApi.utils.serialize.base_decode(txHash)
         const status = await near.connection.provider.txStatus(txHashBytes, this.config.contractName);
         const outcome: any = status.transaction_outcome
         const date = (await near.connection.provider.block(outcome.block_hash)).header.timestamp / 1000000
 
-        console.log('date', date)
         const actions = (status.transaction.actions as Array<any>) || []
         if (actions && actions.length > 0) {
             const transferFromAction = actions.find(x => x.FunctionCall.method_name === "transferFrom")
@@ -256,6 +265,8 @@ type ElDoradoContract = {
         spender: string,
         tokens: number
     }): Promise<boolean>
+
+    balanceOf(params: { tokenOwner: string }): Promise<number>
 }
 
 export type NearConfig = {
@@ -271,7 +282,6 @@ export type NearAccount = {
     accountId: string
     balance: string
     status: string
-    identifier: string
     walletId: string
 }
 

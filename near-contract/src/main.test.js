@@ -11,7 +11,6 @@ beforeAll(async function () {
 
 test('transfer', async () => {
   const balance = await window.contract.balanceOf({tokenOwner: window.accountId})
-  //console.log('balance', balance)
   expect(balance).toBe(0)
   // const result = await window.contract.transfer({ to: window.accountId, tokens: 1 })
   // expect(result).toBe(true)
