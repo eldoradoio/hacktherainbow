@@ -2,6 +2,8 @@ import * as nearApi from 'near-api-js/lib';
 import BN from 'bn.js';
 import { KeyStore } from "near-api-js/lib/key_stores";
 import { INearAccounts } from './INearAccounts'
+import { Signature } from 'near-api-js/lib/transaction';
+import { ExecutionStatus } from 'near-api-js/lib/providers/provider';
 
 export * from './INearAccounts'
 export * from './IKeyStoreRepository'
@@ -35,9 +37,9 @@ export class NearAccounts implements INearAccounts {
 
         const mainAccount = new nearApi.Account(near.connection, this.config.masterAccount);
 
-        const approveAmount =        new BN("4231039307375954236152")
+        const approveAmount = new BN("4231039307375954236152")
         const createAccountAmount = new BN("16552803572267293929962")
-        const noIdeaWhy =           new        BN("2991510480986748")
+        const noIdeaWhy = new BN("2991510480986748")
         const amount = createAccountAmount.add(approveAmount).add(noIdeaWhy)
         const accountId = identifier
 
@@ -58,10 +60,10 @@ export class NearAccounts implements INearAccounts {
 
         await this.keyStore.setKey(this.config.networkId, accountId, keyPair);
 
-        
+
         const createdResponse = await mainAccount.createAccount(accountId, keyPair.getPublicKey(), amount);
         const account = new nearApi.Account(near.connection, accountId)
-        
+
         const senderContract = this.getContract(account)
 
         // TODO: Use signAndSendTransaction instead of doing approve here
@@ -91,18 +93,73 @@ export class NearAccounts implements INearAccounts {
         const masterContract = this.getContract(masterAccount)
         const tokenAmount = new BN(amount).toNumber()
 
-        const result = await masterContract.transferFrom({ from: fromAccount.accountId, to: toAccount.accountId, tokens: tokenAmount })
-        if (!result) {
-            throw new Error('Could not create transfer');
+        const args = { from: fromAccount.accountId, to: toAccount.accountId, tokens: tokenAmount }
+        // const result = await masterContract.transferFrom(args)
+        // if (!result) {
+        //     throw new Error('Could not create transfer');
+        // }
+
+        const networkStatus = await near.connection.provider.status();
+        const recentBlock = networkStatus.sync_info.latest_block_hash;
+        const blockHash = nearApi.utils.serialize.base_decode(recentBlock);
+
+        const response = await near.connection.provider.query(`access_key/${masterAccount.accountId}`, '');
+        const keypair = await this.keyStore.getKey(this.config.networkId, masterAccount.accountId)
+        const publickey = keypair.getPublicKey();
+        const key = response.keys.filter((k: any) => k.public_key === publickey.toString())[0];
+        console.assert(key.access_key.permission === 'FullAccess');
+        const nonce = key.access_key.nonce + 1; // will increment with each use of the key
+
+        const actions = [
+            // masterAccount.functionCall(this.config.contractName, 'transferFrom', args)
+            // nearApi.transactions.transfer(new BN(1))
+            nearApi.transactions.functionCall('transferFrom', args, new BN(8000000000000), new BN(0))
+        ];
+
+        const transaction = nearApi.transactions.createTransaction(masterAccount.accountId, publickey, masterAccount.accountId, nonce, actions, blockHash);
+        // const bytes = transaction.encode();
+
+        // const signedMsg = await near.connection.signer.signMessage(bytes, masterAccount.accountId, this.config.networkId);
+
+        // WARNING: this line won't work bc Signature is not exported by near-api-js
+        // const signedTx = new nearApi.transactions.SignedTransaction({ transaction, signature: new Signature(signedMsg.signature) });
+        const [bt, signedTx] = await nearApi.transactions.signTransaction(transaction, near.connection.signer, masterAccount.accountId, this.config.networkId)
+
+   
+        let receipt = await near.connection.provider.sendTransaction(signedTx);
+        let result: boolean = false;
+        if (receipt.status) {
+            const status = receipt.status as ExecutionStatus
+            if (status.Failure) {
+                if (status.Failure.error_message) {
+                    throw new Error(status.Failure.error_message);
+                }else{
+                    throw new Error(JSON.stringify(status.Failure));
+                }
+            }else if(status.SuccessValue){
+                result = JSON.parse(atob(status.SuccessValue))
+                if(result === true){
+                    result = true
+                }else{
+                    result = false
+                }
+            }
+            else{
+                result = false;
+            }
         }
 
+        
+        console.log(JSON.stringify(receipt, null, 2));
+        const receiptId = receipt.transaction_outcome.outcome.receipt_ids[0]
+        console.log('receipt 1', receiptId)
 
         return {
             from: from,
             to: to,
             amount: amount,
             date: date,
-            id: ''
+            id: receiptId
         }
     }
 
