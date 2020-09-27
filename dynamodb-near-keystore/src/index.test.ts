@@ -38,7 +38,12 @@ describe('Near provider', () => {
         await nearAccounts.transfer(fromAccount.accountId, "1")
 
         // proceed to send that token to the receiver
-        await nearAccounts.transferFrom(fromAccount.accountId, toAccount.accountId, '1')
+        const transfer = await nearAccounts.transferFrom(fromAccount.accountId, toAccount.accountId, '1')
+        const status = await nearAccounts.getTransfer(transfer.id)
+        expect(status).toBeTruthy()
+        expect(status?.from).toBe(fromAccount.accountId)
+        expect(status?.to).toBe(toAccount.accountId)
+        expect(status?.amount).toBe('1')
     })
 
 

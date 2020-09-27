@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import { KeyStore } from "near-api-js/lib/key_stores";
 import { INearAccounts } from './INearAccounts'
 import { Signature } from 'near-api-js/lib/transaction';
-import { ExecutionStatus } from 'near-api-js/lib/providers/provider';
+import { ExecutionStatus, FinalExecutionOutcome } from 'near-api-js/lib/providers/provider';
 
 export * from './INearAccounts'
 export * from './IKeyStoreRepository'
@@ -125,7 +125,7 @@ export class NearAccounts implements INearAccounts {
         // const signedTx = new nearApi.transactions.SignedTransaction({ transaction, signature: new Signature(signedMsg.signature) });
         const [bt, signedTx] = await nearApi.transactions.signTransaction(transaction, near.connection.signer, masterAccount.accountId, this.config.networkId)
 
-   
+
         let receipt = await near.connection.provider.sendTransaction(signedTx);
         let result: boolean = false;
         if (receipt.status) {
@@ -133,34 +133,66 @@ export class NearAccounts implements INearAccounts {
             if (status.Failure) {
                 if (status.Failure.error_message) {
                     throw new Error(status.Failure.error_message);
-                }else{
+                } else {
                     throw new Error(JSON.stringify(status.Failure));
                 }
-            }else if(status.SuccessValue){
-                result = JSON.parse(atob(status.SuccessValue))
-                if(result === true){
+            } else if (status.SuccessValue) {
+
+                result = this.atobtojson(status.SuccessValue)
+                if (result === true) {
                     result = true
-                }else{
+                } else {
                     result = false
                 }
             }
-            else{
+            else {
                 result = false;
             }
         }
 
-        
-        console.log(JSON.stringify(receipt, null, 2));
+
+        // console.log(JSON.stringify(receipt, null, 2));
         const receiptId = receipt.transaction_outcome.outcome.receipt_ids[0]
+        const txHash = receipt.transaction_outcome.id
         console.log('receipt 1', receiptId)
+        console.log('txhash', txHash)
 
         return {
             from: from,
             to: to,
             amount: amount,
-            date: date,
-            id: receiptId
+            date: date, // find tx date
+            id: txHash,
+            status: TransferStatus.Sent
         }
+    }
+
+
+    public async getTransfer(txHash: string): Promise<NearTransfer | undefined> {
+        
+        const near = await this.connect()
+        const txHashBytes = nearApi.utils.serialize.base_decode(txHash)
+        const status = await near.connection.provider.txStatus(txHashBytes, this.config.contractName);
+        const outcome: any = status.transaction_outcome
+        const date = (await near.connection.provider.block(outcome.block_hash)).header.timestamp / 1000000
+
+        console.log('date', date)
+        const actions = (status.transaction.actions as Array<any>) || []
+        if (actions && actions.length > 0) {
+            const transferFromAction = actions.find(x => x.FunctionCall.method_name === "transferFrom")
+            if (transferFromAction) {
+                const transferFromArgs = this.atobtojson(transferFromAction.FunctionCall.args)
+                return {
+                    from: transferFromArgs.from,
+                    to: transferFromArgs.to,
+                    amount: transferFromArgs.tokens.toString(),
+                    id: txHash,
+                    status: TransferStatus.Final,
+                    date: new Date(date).toISOString() // find tx date
+                }
+            }
+        }
+        return;
     }
 
     public async transfer(to: string, amount: string): Promise<NearTransfer> {
@@ -182,7 +214,8 @@ export class NearAccounts implements INearAccounts {
             to: to,
             amount: amount,
             date: date,
-            id: ''
+            id: '', // TODO pass hash
+            status: TransferStatus.Sent
         }
     }
 
@@ -191,6 +224,19 @@ export class NearAccounts implements INearAccounts {
             viewMethods: ['balanceOf', 'totalSupply', 'owner'],
             changeMethods: ['transfer', 'transferFrom', 'init', 'mint', 'approve'],
         }) as any as ElDoradoContract;
+    }
+
+    private atobtojson(result: any) {
+        if (typeof result === 'string') {
+            const value = Buffer.from(result, 'base64').toString();
+            try {
+                return JSON.parse(value);
+            }
+            catch (e) {
+                return value;
+            }
+        }
+        return null;
     }
 }
 
@@ -235,4 +281,11 @@ export type NearTransfer = {
     amount: string
     id: string
     date: string
+    status: TransferStatus
+}
+
+export enum TransferStatus {
+    Sent,
+    Final,
+    Error
 }

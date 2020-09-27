@@ -4,4 +4,5 @@ export interface INearAccounts {
     createWallet(identifier: string): Promise<NearAccount>;
     transferFrom(from: string, to: string, amount: string): Promise<NearTransfer>
     transfer(to: string, amount: string): Promise<NearTransfer>
+    getTransfer(txHash: string): Promise<NearTransfer | undefined> 
 }
