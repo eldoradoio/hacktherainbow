@@ -21,7 +21,8 @@ document.querySelector('form').onsubmit = async (event) => {
 
   try {
     // make an update call to the smart contract
-    await window.contract.transfer({ to: address.value, tokens: 1 })
+    //console.log(amount.value)
+    await window.contract.transfer({ to: address.value, tokens: parseInt(parseInt(amount.value).toFixed(0)) })
   } catch (e) {
     alert(
       'Something went wrong! ' +
@@ -63,7 +64,7 @@ document.querySelector('#claim').onclick = async (event) => {
 }
 
 document.querySelector('#mint').onclick = async (event) => {
-  await contract.mint({ amount: 100 })
+  await contract.mint({ amount: 10000 })
 }
 
 document.querySelector('#sign-in-button').onclick = login
