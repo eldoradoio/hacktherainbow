@@ -87,15 +87,6 @@ export class NearAccounts implements INearAccounts {
         const masterContract = this.getContract(masterAccount)
         const tokenAmount = new BN(amount).toNumber()
 
-        // const approved = await senderContract.approve({
-        //     spender: masterAccount.accountId,
-        //     tokens: tokenAmount
-        // })
-
-        // if (!approved) {
-        //     throw new Error('Could not approve allowance');
-        // }
-
         const result = await masterContract.transferFrom({ from: fromAccount.accountId, to: toAccount.accountId, tokens: tokenAmount })
         if (!result) {
             throw new Error('Could not create transfer');
