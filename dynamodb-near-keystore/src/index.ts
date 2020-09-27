@@ -58,10 +58,14 @@ export class NearAccounts implements INearAccounts {
 
         await this.keyStore.setKey(this.config.networkId, accountId, keyPair);
 
+        
         const createdResponse = await mainAccount.createAccount(accountId, keyPair.getPublicKey(), amount);
         const account = new nearApi.Account(near.connection, accountId)
         
         const senderContract = this.getContract(account)
+
+        // TODO: Use signAndSendTransaction instead of doing approve here
+
         const approved = await senderContract.approve({
             spender: mainAccount.accountId,
             tokens: 1000000 // one million preapproved kek
@@ -91,6 +95,8 @@ export class NearAccounts implements INearAccounts {
         if (!result) {
             throw new Error('Could not create transfer');
         }
+
+
         return {
             from: from,
             to: to,
