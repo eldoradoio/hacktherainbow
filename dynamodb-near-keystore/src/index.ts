@@ -53,10 +53,9 @@ export class NearAccounts implements INearAccounts {
 
         const mainAccount = new nearApi.Account(near.connection, this.config.masterAccount);
 
-        const approveAmount = new BN("4231039307375954236152")
-        const createAccountAmount = new BN("16552803572267293929962")
-        const noIdeaWhy = new BN("2991510480986748")
-        const amount = createAccountAmount.add(approveAmount).add(noIdeaWhy)
+        const approveAmount          = new BN("4500000000000000000000")
+        const createAccountAmount   = new BN("17000000000000000000000")
+        const amount = createAccountAmount.add(approveAmount)
 
         const keyPair = nearApi.utils.KeyPairEd25519.fromRandom();
         const publicKey = keyPair.publicKey.toString();
@@ -79,14 +78,6 @@ export class NearAccounts implements INearAccounts {
         const createdResponse = await mainAccount.createAccount(accountId, keyPair.getPublicKey(), amount);
         const account = new nearApi.Account(near.connection, accountId)
 
-        const senderContract = this.getContract(account)
-
-        // TODO: Use signAndSendTransaction instead of doing approve here
-
-        const approved = await senderContract.approve({
-            spender: mainAccount.accountId,
-            tokens: 1000000 // one million preapproved kek
-        })
 
         return {
             accountId: accountId,
@@ -112,6 +103,19 @@ export class NearAccounts implements INearAccounts {
         // if (!result) {
         //     throw new Error('Could not create transfer');
         // }
+        const allowance = await masterContract.allowance({ tokenOwner: from,  spender: masterAccount.accountId})
+        if(allowance < parseInt(amount, undefined) ){
+            console.log('not enough allowance. Calling approve')
+            const senderContract = this.getContract(fromAccount)
+
+            // TODO: Use signAndSendTransaction instead of doing approve here
+    
+            const approved = await senderContract.approve({
+                spender: masterAccount.accountId,
+                tokens: 100000000 // one million preapproved kek
+            })
+        }
+
 
         const networkStatus = await near.connection.provider.status();
         const recentBlock = networkStatus.sync_info.latest_block_hash;
@@ -230,7 +234,7 @@ export class NearAccounts implements INearAccounts {
 
     private getContract(signer: nearApi.Account): ElDoradoContract {
         return new nearApi.Contract(signer, this.config.contractName, {
-            viewMethods: ['balanceOf', 'totalSupply', 'owner'],
+            viewMethods: ['balanceOf', 'totalSupply', 'owner', 'allowance'],
             changeMethods: ['transfer', 'transferFrom', 'init', 'mint', 'approve'],
         }) as any as ElDoradoContract;
     }
@@ -265,6 +269,8 @@ type ElDoradoContract = {
         spender: string,
         tokens: number
     }): Promise<boolean>
+
+    allowance(params: { tokenOwner: string, spender: string }): Promise<number>
 
     balanceOf(params: { tokenOwner: string }): Promise<number>
 }

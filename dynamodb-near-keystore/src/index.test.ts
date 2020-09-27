@@ -11,7 +11,6 @@ describe('Near provider', () => {
 
 
     test('Wallet', async () => {
-        return;
         const { nearAccounts, dynamoDbKeyStoreRepository, network } = await init();
         const newAccount = await createAccount(nearAccounts)
 
