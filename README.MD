@@ -16,7 +16,7 @@ After opening it in vscode you'll be prompted to re-open it in a Container. Pres
 
 All the tooling, SDKs and a local dynamodb image will be ready for you.
 
-## High-level technical implementation
+## High-level implementation
 
 - [x] All Near tokens funds are backed locked in a common ETH address owned by el dorado
 - [ ] As soon as funds are final, we mint them on our contract using the rainbow bridge (Pending)
