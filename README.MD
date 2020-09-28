@@ -23,3 +23,4 @@ All the tooling, SDKs and a local dynamodb image will be ready for you.
 - [x] A simple contract for tokens in near
 - [x] Interface to near token contract to be able to make transfers between el dorado users using the app
 - [x] Integrate Near into our backend
+- [ ] When users buy crypto with card, send the funds to lockable address
