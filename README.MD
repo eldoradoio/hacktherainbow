@@ -15,9 +15,10 @@ TODO: Replace with our video:
 
 If you want to develop on this repo, the only thing you'd need is Docker, VSCode, and [this extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers#review-details)
 
-After opening it in vscode you'll be prompted to re-open it in a Container. Press yes.
+After opening it in vscode you'll be prompted to re-open it in a Container. Press `Reopen in container`.
+if not prompted, can also press `Ctrl+Shift+p` and type `Reopen in container` and select that item from the command bar.
 
-All the tooling, SDKs and a local dynamodb image will be ready for you.
+All the tooling, SDKs, and a local dynamodb image will be ready for you!!
 
 ## High-level implementation and Status
 
@@ -33,13 +34,24 @@ All the tooling, SDKs and a local dynamodb image will be ready for you.
 ## How to test the submission 
 ### NOTE: This might not work on a MAC due to docker networking
 
-### First run the contract
+### Environment
+First follow the *Dev Environment* guide above to get everything ready, without this the library will not work without additional setup and configuration.
+
+### Run the contract
+NOTE: The first time yarn installs the node modules, it might fail, just do it again and you'll be fine.
 ```bash
 cd near-contract
+yarn
 yarn dev
 ```
-### Contract ownership
-Browse to the site and clock on CLAIM to get ownership of the contract if you haven't done so
+The command will fail at the end because it cannot open the browser (you are in a container), but worry not, just click the url shown in the terminal and it will open it for you. This tunels the port from the container to your host, so you can connect to it.
+It will show you that you've got 0 tokens, and there are 0 tokens in supply.
+
+### Contract ownership and supply
+*NOTE*: If you want the account of the contract and the owner to be different (we call it merchant account) then you need to `near login` with the same account you claim the token.
+
+Once you get to the site click on CLAIM to get ownership of the contract if you haven't done so. 
+Because our bridge PoC did not work, (our team worked in parallel) we can use the Mint button to get some tokens to the owner (merchant account)
 
 ### Contract and accountId
 Copy the ContractId and accountId for later
@@ -48,6 +60,7 @@ Make sure the dev credentials from the *near-contract* deployment are stored in 
 ### The Npm library have an integration test that works with the contract, your account details 
 To run the library run the following command:
 ```bash
+yarn
 CONTRACT_NAME=<ContractName> MASTER_ACCOUNT=<AccountName> yarn test
 ```
 The test will get those credentials `CONTRACT_NAME` && `MASTER_ACCOUNT` and save them to DynamoDb
