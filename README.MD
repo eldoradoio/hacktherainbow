@@ -1,7 +1,7 @@
 # El Dorado - Hack the Rainbow
 
 TODO: Replace with our video:
-[![ElDoradoSubmission(https://img.youtube.com/vi/C0DPdy98e4c/0.jpg)](https://www.youtube.com/watch?v=C0DPdy98e4c)
+[![ElDoradoSubmission](https://img.youtube.com/vi/C0DPdy98e4c/0.jpg)](https://www.youtube.com/watch?v=C0DPdy98e4c)
 
 ## This repo contains:
  - **/near-contract**: 
