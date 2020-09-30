@@ -60,11 +60,18 @@ document.querySelector('input#amount').oninput = (event) => {
 }
 
 document.querySelector('#claim').onclick = async (event) => {
+  const button = event.target
+  button.disabled = true;
   await contract.init({ initialOwner: window.accountId })
+  button.disabled = false;
 }
 
 document.querySelector('#mint').onclick = async (event) => {
+  const button = event.target
+  button.disabled = true;
   await contract.mint({ amount: 10000 })
+  button.disabled = false;
+  fetchBalance();
 }
 
 document.querySelector('#sign-in-button').onclick = login
