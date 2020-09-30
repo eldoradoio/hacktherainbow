@@ -63,4 +63,11 @@ To run the library run the following command:
 yarn
 CONTRACT_NAME=<ContractName> MASTER_ACCOUNT=<AccountName> yarn test
 ```
-The test will get those credentials `CONTRACT_NAME` && `MASTER_ACCOUNT` and save them to DynamoDb
+Those credentials `CONTRACT_NAME` && `MASTER_ACCOUNT` will be saved to your local DynamoDb to be used on by the test later on.
+
+There are two integration tests:
+- Wallet: It creates a user and makes sure that the keypair is stored in dynamo and can be retrieved
+- Transfer: 
+  - Two users are created
+  - Fund user *A* with 5 tokens
+  - Use the transferFrom function to send 1 token from A to B using the merchat account (with allowance) 
