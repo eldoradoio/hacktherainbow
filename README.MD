@@ -38,12 +38,18 @@ All the tooling, SDKs, and a local dynamodb image will be ready for you!!
 First follow the *Dev Environment* guide above to get everything ready, without this the library will not work without additional setup and configuration.
 
 ### Run the contract
+NOTE: The first time yarn installs the node modules, it might fail, just do it again and you'll be fine.
 ```bash
 cd near-contract
+yarn
 yarn dev
 ```
-### Contract ownership
-Browse to the site and clock on CLAIM to get ownership of the contract if you haven't done so
+The command will fail at the end because it cannot open the browser (you are in a container), but worry not, just click the url shown in the terminal and it will open it for you. This tunels the port from the container to your host, so you can connect to it.
+It will show you that you've got 0 tokens, and there are 0 tokens in supply.
+
+### Contract ownership and supply
+Once you get to the site click on CLAIM to get ownership of the contract if you haven't done so. 
+Because our bridge PoC did not work, (our team worked in parallel) we can use the Mint button to get some tokens to the owner (we call it the merchant account)
 
 ### Contract and accountId
 Copy the ContractId and accountId for later
