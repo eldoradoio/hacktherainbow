@@ -2,14 +2,12 @@
 ## Objective
 Integrate El Dorado with Near so the users enjoy a fast, reliable, and accessible blockchain stable-coin account.
 
-TODO: Replace with our video:
 [![ElDoradoSubmission](https://img.youtube.com/vi/GmqKIX5VXrw/0.jpg)](https://www.youtube.com/watch?v=GmqKIX5VXrw)
 
 ## Relevant Links
 - El Dorado App to which we integrated near: https://eldorado-dev.codemagic.app/#/ 
 - Deployed contract: https://explorer.testnet.near.org/accounts/juan.testnet
 - Deployed contract's management site: https://eldoradoio.github.io/hacktherainbow/
-- Pitch: TODO
 
 ## This repo contains:
  - **/near-contract**: 
