@@ -4,7 +4,7 @@ import { KeyStoreRepositoryMock } from "./__mocks__/IKeyStoreRepository";
 import { UnencryptedFileSystemKeyStore } from 'near-api-js/lib/key_stores/unencrypted_file_system_keystore';
 import { KeyPairEd25519 } from "near-api-js/lib/utils";
 
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'juan.testnet'
+//const CONTRACT_NAME = process.env.CONTRACT_NAME || 'juan.testnet'
 const MASTER_ACCOUNT = process.env.MASTER_ACCOUNT || 'juan.testnet'
 
 describe('Near provider', () => {
