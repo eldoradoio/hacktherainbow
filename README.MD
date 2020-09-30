@@ -1,7 +1,9 @@
 # El Dorado - Hack the Rainbow
+## Objective
+Integrate El Dorado with Near so the users enjoy a fast, reliable, and accessible blockchain stable-coin account.
 
 TODO: Replace with our video:
-[![ElDoradoSubmission](https://img.youtube.com/vi/C0DPdy98e4c/0.jpg)](https://www.youtube.com/watch?v=C0DPdy98e4c)
+[![ElDoradoSubmission](https://img.youtube.com/vi/GmqKIX5VXrw/0.jpg)](https://www.youtube.com/watch?v=GmqKIX5VXrw)
 
 ## Relevant Links
 - El Dorado App to which we integrated near: https://eldorado-dev.codemagic.app/#/ 
