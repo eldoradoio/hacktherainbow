@@ -3,6 +3,12 @@
 TODO: Replace with our video:
 [![ElDoradoSubmission](https://img.youtube.com/vi/C0DPdy98e4c/0.jpg)](https://www.youtube.com/watch?v=C0DPdy98e4c)
 
+Our App: https://eldorado-dev.codemagic.app/#/ 
+Pitch: TODO
+
+
+
+
 ## This repo contains:
  - **/near-contract**: 
     - A token implementation put together from several examples
