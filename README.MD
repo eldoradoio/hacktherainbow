@@ -4,7 +4,7 @@ TODO: Replace with our video:
 [![ElDoradoSubmission](https://img.youtube.com/vi/C0DPdy98e4c/0.jpg)](https://www.youtube.com/watch?v=C0DPdy98e4c)
 
 ## Relevant Links
-- Our App: https://eldorado-dev.codemagic.app/#/ 
+- El Dorado App to which we integrated near: https://eldorado-dev.codemagic.app/#/ 
 - Deployed contract: https://explorer.testnet.near.org/accounts/juan.testnet
 - Deployed contract's management site: https://eldoradoio.github.io/hacktherainbow/
 - Pitch: TODO
