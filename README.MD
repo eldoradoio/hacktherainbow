@@ -5,8 +5,7 @@ TODO: Replace with our video:
 
 Our App: https://eldorado-dev.codemagic.app/#/ 
 Pitch: TODO
-
-
+Deployed contract: https://explorer.testnet.near.org/accounts/juan.testnet
 
 
 ## This repo contains:
