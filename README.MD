@@ -48,8 +48,10 @@ The command will fail at the end because it cannot open the browser (you are in 
 It will show you that you've got 0 tokens, and there are 0 tokens in supply.
 
 ### Contract ownership and supply
+*NOTE*: If you want the account of the contract and the owner to be different (we call it merchant account) then you need to `near login` with the same account you claim the token.
+
 Once you get to the site click on CLAIM to get ownership of the contract if you haven't done so. 
-Because our bridge PoC did not work, (our team worked in parallel) we can use the Mint button to get some tokens to the owner (we call it the merchant account)
+Because our bridge PoC did not work, (our team worked in parallel) we can use the Mint button to get some tokens to the owner (merchant account)
 
 ### Contract and accountId
 Copy the ContractId and accountId for later
@@ -58,6 +60,7 @@ Make sure the dev credentials from the *near-contract* deployment are stored in 
 ### The Npm library have an integration test that works with the contract, your account details 
 To run the library run the following command:
 ```bash
+yarn
 CONTRACT_NAME=<ContractName> MASTER_ACCOUNT=<AccountName> yarn test
 ```
 The test will get those credentials `CONTRACT_NAME` && `MASTER_ACCOUNT` and save them to DynamoDb
