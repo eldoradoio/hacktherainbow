@@ -4,10 +4,10 @@ TODO: Replace with our video:
 [![ElDoradoSubmission](https://img.youtube.com/vi/C0DPdy98e4c/0.jpg)](https://www.youtube.com/watch?v=C0DPdy98e4c)
 
 ## Relevant Links
-Our App: https://eldorado-dev.codemagic.app/#/ 
-Pitch: TODO
-Deployed contract: https://explorer.testnet.near.org/accounts/juan.testnet
-Deployed contract's management site: https://eldoradoio.github.io/hacktherainbow/
+- Our App: https://eldorado-dev.codemagic.app/#/ 
+- Pitch: TODO
+- Deployed contract: https://explorer.testnet.near.org/accounts/juan.testnet
+- Deployed contract's management site: https://eldoradoio.github.io/hacktherainbow/
 
 ## This repo contains:
  - **/near-contract**: 
