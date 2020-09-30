@@ -1,8 +1,8 @@
 # El Dorado - Hack the Rainbow 🌈
+[![ElDoradoSubmission](https://img.youtube.com/vi/GmqKIX5VXrw/0.jpg)](https://www.youtube.com/watch?v=GmqKIX5VXrw)
+
 ## Objective
 Integrate El Dorado with Near so the users enjoy a fast, reliable, and accessible blockchain stable-coin account.
-
-[![ElDoradoSubmission](https://img.youtube.com/vi/GmqKIX5VXrw/0.jpg)](https://www.youtube.com/watch?v=GmqKIX5VXrw)
 
 ## Relevant Links
 - El Dorado App to which we integrated near: https://eldorado-dev.codemagic.app/#/ 
@@ -12,10 +12,11 @@ Integrate El Dorado with Near so the users enjoy a fast, reliable, and accessibl
 ## This repo contains:
  - **/near-contract**: 
     - A token implementation put together from several examples
-    - Roughtly-put-together UI to manage said contract. Manage the contract, Mint and send tokens. (NOTE: this is not intented to be used by users)
+    - Roughtly-put-together UI to manage said contract: Claim, Mint, and Send tokens. (NOTE: this is not intented to be used by users)
  - **/eldoardo-near-client**: 
     - An *npm* client library that El Dorado uses in our backend to communciate to the token contract
-    - A very basic (NOT READY FOR PRODUCTION) implementation of a KeyStore that uses AWS DynamoDB as storage.
+    - A very basic (NOT READY FOR PRODUCTION) implementation of a KeyStore that uses *AWS DynamoDB* as storage.
+
 
 ## Dev Environment
 
