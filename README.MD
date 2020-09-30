@@ -33,7 +33,10 @@ All the tooling, SDKs and a local dynamodb image will be ready for you.
 ## How to test the submission 
 ### NOTE: This might not work on a MAC due to docker networking
 
-### First run the contract
+### Environment
+First follow the Dev Environment guide to get everything ready, without this the library will not work without additional setup and configuration.
+
+### Run the contract
 ```bash
 cd near-contract
 yarn dev
