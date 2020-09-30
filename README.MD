@@ -15,9 +15,10 @@ TODO: Replace with our video:
 
 If you want to develop on this repo, the only thing you'd need is Docker, VSCode, and [this extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers#review-details)
 
-After opening it in vscode you'll be prompted to re-open it in a Container. Press yes.
+After opening it in vscode you'll be prompted to re-open it in a Container. Press `Reopen in container`.
+if not prompted, can also press `Ctrl+Shift+p` and type `Reopen in container` and select that item from the command bar.
 
-All the tooling, SDKs and a local dynamodb image will be ready for you.
+All the tooling, SDKs, and a local dynamodb image will be ready for you!!
 
 ## High-level implementation and Status
 
@@ -34,7 +35,7 @@ All the tooling, SDKs and a local dynamodb image will be ready for you.
 ### NOTE: This might not work on a MAC due to docker networking
 
 ### Environment
-First follow the Dev Environment guide to get everything ready, without this the library will not work without additional setup and configuration.
+First follow the *Dev Environment* guide above to get everything ready, without this the library will not work without additional setup and configuration.
 
 ### Run the contract
 ```bash
