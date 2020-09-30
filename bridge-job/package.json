@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "rainbow-bridge-lib": "^1.0.6",
+    "rainbow-token-connector": "near/rainbow-token-connector#620ad3e45f9f722d77f88a7a39b252d5a4ead9ef"
+  }
+}
