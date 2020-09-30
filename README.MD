@@ -30,7 +30,8 @@ All the tooling, SDKs and a local dynamodb image will be ready for you.
    - [x] Because of the bridge not being ready we send the near tokens to the user after purchasing crypto without any "proof"
    
 
-## How to test the submission **Might not work on a MAC**
+## How to test the submission 
+### NOTE: This might not work on a MAC due to docker networking
 
 ### First run the contract
 ```bash
