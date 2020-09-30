@@ -2,8 +2,7 @@ import * as nearApi from 'near-api-js/lib';
 import BN from 'bn.js';
 import { KeyStore } from "near-api-js/lib/key_stores";
 import { INearAccounts } from './INearAccounts'
-import { Signature } from 'near-api-js/lib/transaction';
-import { ExecutionStatus, FinalExecutionOutcome } from 'near-api-js/lib/providers/provider';
+import { ExecutionStatus } from 'near-api-js/lib/providers/provider';
 
 export * from './INearAccounts'
 export * from './IKeyStoreRepository'
@@ -53,8 +52,8 @@ export class NearAccounts implements INearAccounts {
 
         const mainAccount = new nearApi.Account(near.connection, this.config.masterAccount);
 
-        const approveAmount          = new BN("4500000000000000000000")
-        const createAccountAmount   = new BN("17000000000000000000000")
+        const approveAmount = new BN("4500000000000000000000")
+        const createAccountAmount = new BN("17000000000000000000000")
         const amount = createAccountAmount.add(approveAmount)
 
         const keyPair = nearApi.utils.KeyPairEd25519.fromRandom();
@@ -88,6 +87,10 @@ export class NearAccounts implements INearAccounts {
     }
 
     public async transferFrom(from: string, to: string, amount: string): Promise<NearTransfer> {
+        /**
+         * NOTE: We know it's too complicated, but it was a good way to see how it all laid out internally in the JS api
+         */
+
         const date = new Date(Date.now()).toISOString()
         const near = await this.connect()
 
@@ -97,20 +100,14 @@ export class NearAccounts implements INearAccounts {
 
         const masterContract = this.getContract(masterAccount)
         const tokenAmount = new BN(amount).toNumber()
-
+        
         const args = { from: fromAccount.accountId, to: toAccount.accountId, tokens: tokenAmount }
-        // const result = await masterContract.transferFrom(args)
-        // if (!result) {
-        //     throw new Error('Could not create transfer');
-        // }
-        const allowance = await masterContract.allowance({ tokenOwner: from,  spender: masterAccount.accountId})
-        if(allowance < parseInt(amount, undefined) ){
-            // TODO: fund account if not enough balance for any reason
+       
+        const allowance = await masterContract.allowance({ tokenOwner: from, spender: masterAccount.accountId })
+        if (allowance < parseInt(amount, undefined)) {
             console.log('not enough allowance. Calling approve')
             const senderContract = this.getContract(fromAccount)
 
-            // TODO: Use signAndSendTransaction instead of doing approve here
-    
             const approved = await senderContract.approve({
                 spender: masterAccount.accountId,
                 tokens: 100000000 // one million preapproved kek
@@ -130,18 +127,12 @@ export class NearAccounts implements INearAccounts {
         const nonce = key.access_key.nonce + 1; // will increment with each use of the key
 
         const actions = [
-            // masterAccount.functionCall(this.config.contractName, 'transferFrom', args)
-            // nearApi.transactions.transfer(new BN(1))
-            nearApi.transactions.functionCall('transferFrom', args, new BN(8000000000000), new BN(0))
+
+            nearApi.transactions.functionCall('transferFrom', args, new BN(15000000000000), new BN(0))
         ];
 
-        const transaction = nearApi.transactions.createTransaction(masterAccount.accountId, publickey, masterAccount.accountId, nonce, actions, blockHash);
-        // const bytes = transaction.encode();
+        const transaction = nearApi.transactions.createTransaction(masterAccount.accountId, publickey, this.config.contractName, nonce, actions, blockHash);
 
-        // const signedMsg = await near.connection.signer.signMessage(bytes, masterAccount.accountId, this.config.networkId);
-
-        // WARNING: this line won't work bc Signature is not exported by near-api-js
-        // const signedTx = new nearApi.transactions.SignedTransaction({ transaction, signature: new Signature(signedMsg.signature) });
         const [bt, signedTx] = await nearApi.transactions.signTransaction(transaction, near.connection.signer, masterAccount.accountId, this.config.networkId)
 
 
