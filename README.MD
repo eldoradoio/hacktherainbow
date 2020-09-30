@@ -22,8 +22,8 @@ All the tooling, SDKs, and a local dynamodb image will be ready for you!!
 
 ## High-level implementation and Status
 
-- [x] All Near tokens funds are backed locked in a common ETH address owned by El Dorado
-- [ ] As soon as funds are final, we mint them on our contract using the rainbow bridge (Pending)
+- [x] All Near tokens funds are backed in a common ETH address owned by El Dorado
+- [ ] As soon as funds are final, we mint them on our contract using the rainbow bridge (Pending) (LOCK FUNDS)
 - [x] A simple contract for tokens in near
 - [x] Interface to near token contract to be able to make transfers between El Dorado users using the app
 - [x] Integrate Near into our backend
@@ -45,29 +45,31 @@ yarn
 yarn dev
 ```
 The command will fail at the end because it cannot open the browser (you are in a container), but worry not, just click the url shown in the terminal and it will open it for you. This tunels the port from the container to your host, so you can connect to it.
+
 It will show you that you've got 0 tokens, and there are 0 tokens in supply.
 
 ### Contract ownership and supply
 *NOTE*: If you want the account of the contract and the owner to be different (we call it merchant account) then you need to `near login` with the same account you claim the token.
 
 Once you get to the site click on CLAIM to get ownership of the contract if you haven't done so. 
-Because our bridge PoC did not work, (our team worked in parallel) we can use the Mint button to get some tokens to the owner (merchant account)
+Because our bridge PoC did not work, (our team worked in parallel) we can use the Mint button to get some tokens to the owner (merchant account).
 
-### Contract and accountId
-Copy the ContractId and accountId for later
-Make sure the dev credentials from the *near-contract* deployment are stored in `/home/gitpod/.near-credentials`
+### Contract and Account Id
+Copy down the Contract Id and Account Id for later.
 
-### The Npm library have an integration test that works with the contract, your account details 
+Make sure the dev credentials from the *near-contract* deployment are stored in `/home/gitpod/.near-credentials`.
+
+### The Npm library have an integration test that works with the contract
 To run the library run the following command:
 ```bash
 yarn
 CONTRACT_NAME=<ContractName> MASTER_ACCOUNT=<AccountName> yarn test
 ```
-Those credentials `CONTRACT_NAME` && `MASTER_ACCOUNT` will be saved to your local DynamoDb to be used on by the test later on.
+Those credentials `CONTRACT_NAME` & `MASTER_ACCOUNT` will be saved to your local DynamoDb to be used by the test later on.
 
 There are two integration tests:
-- Wallet: It creates a user and makes sure that the keypair is stored in dynamo and can be retrieved
+- Wallet: It creates a user and makes sure that the keypair is stored in dynamo and can be retrieved.
 - Transfer: 
-  - Two users are created
-  - Fund user *A* with 5 tokens
-  - Use the transferFrom function to send 1 token from A to B using the merchat account (with allowance) 
+  - Two users are created.
+  - Fund user *A* with 5 tokens.
+  - Use the `transferFrom` function to send 1 token from A to B using the merchat account (with allowance).
