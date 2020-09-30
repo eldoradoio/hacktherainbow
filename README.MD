@@ -1,4 +1,4 @@
-# El Dorado - Hack the Rainbow
+# El Dorado - Hack the Rainbow 🌈
 ## Objective
 Integrate El Dorado with Near so the users enjoy a fast, reliable, and accessible blockchain stable-coin account.
 
